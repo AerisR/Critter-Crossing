@@ -10,13 +10,17 @@ Game::Game(sf::RenderWindow& game_window)
 
 Game::~Game()
 {
-
+	delete [] animals;
+	delete[] passports;
+	delete character;
+	delete passport;
 }
 
 // We call this once after the game class is instantiated
 bool Game::init()
 {
-
+	character = new sf::Sprite(animals[0]);
+	passport = new sf::Sprite(passports[0]);
   return true;
 }
 
@@ -44,6 +48,11 @@ void Game::mouseButtonPressed(const sf::Event::MouseButtonPressed* event)
 	// You can tell which button was pressed by comparing it to SFML's definitions of mouse buttons
 	if (event->button == sf::Mouse::Button::Left)
 	{
+		sf::Vector2f click = static_cast<sf::Vector2f>(event->position);
+		if (passport->getGlobalBounds().contains(click))
+		{
+			dragged = passport;
+		}
 		//Left mouse button was pressed
 	}
 }
@@ -80,4 +89,37 @@ void Game::keyReleased(const sf::Event::KeyReleased* event)
 
 }
 
+void Game::newAnimal()
+{
+	int animal_index = rand() % 3;
+	int passport_index = rand() % 3;
 
+	if (animal_index == passport_index)
+	{
+		should_accept = true;
+	}
+	else
+	{
+		should_accept = false;
+	}
+
+	character->setTexture(animals[animal_index], true);
+	character->setScale({1.8, 1.8});
+	character->setPosition(sf::Vector2f(window.getSize().x / 12, window.getSize().y / 12));
+
+	passport->setTexture(passports[passport_index]);
+	passport->setScale({ 0.6, 0.6 });
+	passport->setPosition(sf::Vector2f(window.getSize().x / 2, window.getSize().y / 3));
+}
+
+void Game::dragSprite(sf::Sprite* sprite)
+{
+	if (sprite != nullptr)
+	{
+		sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
+		sf::Vector2f mouse_positionf = static_cast<sf::Vector2f>(mouse_position);
+
+		sf::Vector2f drag_position = mouse_positionf - drag_offset;
+		sprite->setPosition({ drag_position.x, drag_position.y });
+	}
+}

@@ -16,12 +16,26 @@ class Game
   void mouseButtonReleased(const sf::Event::MouseButtonReleased* event);
   void keyPressed(const sf::Event::KeyPressed* event);
   void keyReleased(const sf::Event::KeyReleased* event);
+  void newAnimal();
+  void dragSprite(sf::Sprite* sprite);
+  bool should_accept;
+  sf::Vector2f mouse_positon;
+  sf::Vector2f mouse_positionf;
+  sf::Vector2f drag_position;
+  sf::Vector2f drag_offset;
+  sf::Vector2f drag_position;
+  
 
  private:
   sf::RenderWindow& window;
   
   sf::Texture background_texture;
   sf::Sprite background = sf::Sprite(background_texture);
+  sf::Sprite* character;
+  sf::Sprite* passport;
+  sf::Texture* animals = new sf::Texture[3];
+  sf::Texture* passports = new sf::Texture[3];
+  sf::Sprite* dragged = nullptr;
 
 };
 
